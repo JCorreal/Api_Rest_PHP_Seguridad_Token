@@ -34,10 +34,8 @@ CREATE TABLE tbl_security (
 );
 
 INSERT INTO tbl_security (username, password, profile)
-VALUES ('Admin', aes_encrypt('123456', 'ApiRest_PHP_JWT') ,'Admin');
-
-INSERT INTO tbl_security (username, password)
-VALUES ('Aux', aes_encrypt('456123', 'ApiRest_PHP_JWT'));
+VALUES ('Admin', aes_encrypt('123456', 'ApiRest_PHP_JWT'),'Admin'),
+       ('Aux',   aes_encrypt('456123', 'ApiRest_PHP_JWT'), 'Aux');
 
 CREATE PROCEDURE spr_R_ObtenerAcceso(
   IN p_username  VARCHAR(20), 
