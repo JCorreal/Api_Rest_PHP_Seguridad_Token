@@ -6,4 +6,4 @@ que valida la autenticidad y autorización sobre los recursos de quien le invoca
 
 En el pdf adjunto se encuentra toda la documentación.
 
-Tambiń, se adjuntan scripts para Oracle y su correspondiente código
+También, se adjuntan scripts para Oracle y su correspondiente código
