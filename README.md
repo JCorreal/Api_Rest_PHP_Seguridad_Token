@@ -5,3 +5,5 @@ Un nuevo Rest en PHP y MariaDB, pero en esta ocasión implementando seguridad me
 que valida la autenticidad y autorización sobre los recursos de quien le invoca.
 
 En el pdf adjunto se encuentra toda la documentación.
+
+Tambiń, se adjuntan scripts para Oracle y su correspondiente código
