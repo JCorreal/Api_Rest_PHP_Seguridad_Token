@@ -63,7 +63,9 @@ IN p_department_id     int (4),
 OUT p_Resultado        tinyint(1))
 BEGIN       
       DECLARE v_DatoExiste tinyint(1) DEFAULT 0;
-      
+      DECLARE v_EmailExiste tinyint(1) DEFAULT 0;      
+      DECLARE v_EmailActual varchar(25) DEFAULT NULL;
+ 
       DECLARE exit HANDLER
       FOR SQLEXCEPTION
       BEGIN
@@ -73,51 +75,61 @@ BEGIN
       
      SET p_Resultado = 0;     
      
+     SELECT count(*) INTO v_EmailExiste FROM tbl_employees WHERE email = p_email;       
+    
      IF (p_employee_id = 0) THEN
-         START TRANSACTION;
-         INSERT INTO tbl_employees(first_name, 
-                               last_name, 
-                               email, 
-                               phone_number, 
-                               hire_date, 
-                               job_id, 
-                               salary, 
-                               commission_pct, 
-                               manager_id, 
-                               department_id)
-         VALUES(p_first_name, 
-                p_last_name, 
-                p_email, 
-                p_phone_number, 
-                p_hire_date, 
-                p_job_id, 
-                p_salary, 
-                p_commission_pct, 
-                P_manager_id, 
-                p_department_id);
-
-         COMMIT;
+         IF (v_EmailExiste = 0) THEN
+	         START TRANSACTION;
+	         INSERT INTO tbl_employees(first_name, 
+	                               last_name, 
+	                               email, 
+	                               phone_number, 
+	                               hire_date, 
+	                               job_id, 
+	                               salary, 
+	                               commission_pct, 
+	                               manager_id, 
+	                               department_id)
+	         VALUES(p_first_name, 
+	                p_last_name, 
+	                p_email, 
+	                p_phone_number, 
+	                p_hire_date, 
+	                p_job_id, 
+	                p_salary, 
+	                p_commission_pct, 
+	                P_manager_id, 
+	                p_department_id);
+	
+	         COMMIT;
+	     ELSE
+	          SET p_RESULTADO = -3; 
+	     END IF;  
      ELSE
-         SELECT employee_id INTO v_DatoExiste FROM tbl_employees WHERE employee_id = p_employee_id;
-         IF (v_DatoExiste <> 0) THEN
-             START TRANSACTION;
-             UPDATE tbl_employees SET   
-             first_name     = p_first_name, 
-             last_name      = p_last_name, 
-             email          = p_email, 
-             phone_number   = p_phone_number, 
-             hire_date      = p_hire_date, 
-             job_id         = p_job_id, 
-             salary         = p_salary, 
-             commission_pct = p_commission_pct, 
-             manager_id     = p_manager_id, 
-             department_id  = p_department_id
-             WHERE employee_id = p_employee_id ;          
-             
-             COMMIT;
+         SELECT employee_id, email INTO v_DatoExiste, v_EmailActual FROM tbl_employees WHERE employee_id = p_employee_id;
+         IF ((v_EmailExiste <> 0) AND (v_EmailActual <> p_email)) THEN  
+              SET p_RESULTADO = -3; 
          ELSE
-             SET p_RESULTADO = -2; 
-         END IF;
+             IF (v_DatoExiste <> 0) THEN
+                 START TRANSACTION;
+                 UPDATE tbl_employees SET   
+                 first_name     = p_first_name, 
+                 last_name      = p_last_name, 
+                 email          = p_email, 
+                 phone_number   = p_phone_number, 
+                 hire_date      = p_hire_date, 
+                 job_id         = p_job_id, 
+                 salary         = p_salary, 
+                 commission_pct = p_commission_pct, 
+                 manager_id     = p_manager_id, 
+                 department_id  = p_department_id
+                 WHERE employee_id = p_employee_id ;          
+                 
+                 COMMIT;
+             ELSE
+                 SET p_RESULTADO = -2; 
+             END IF;        
+         END IF; 
      END IF;           
 END;
 
